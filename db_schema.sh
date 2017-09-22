@@ -1,7 +1,12 @@
 #!/bin/bash
 
+if [ -z "$AGAVE_TICKER_DB" ]; then
+    echo "You need to set \$AGAVE_TICKER_DB var.."
+    exit 0
+fi
+
 #create db
-sqlite3 ticker <<EOS
+sqlite3 $AGAVE_TICKER_DB <<EOS
 
 -- create tables
 -- 'current' stores the ids of the jobs that are currently being performed

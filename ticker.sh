@@ -1,5 +1,16 @@
 #!/bin/bash
 
+if [ -z "$AGAVE_TICKER_DB" ]; then
+    echo "You need to set \$AGAVE_TICKER_DB var.."
+    exit 0
+fi
+
+if [ -z "$AGAVE_TICKER_JOB_FILE" ]; then
+    echo "You need to set \$AGAVE_TICKER_DB var.."
+    exit 0
+fi
+
+
 # check if db exists. Else creates database
 if [ ! -s $AGAVE_TICKER_DB ] 
 then
@@ -7,7 +18,7 @@ then
 fi
 
 # submit job and keep job id
-id=`jobs-submit -F $TICKER_JOB  | sed 's/Successfully submitted job //'`
+id=`jobs-submit -F $AGAVE_TICKER_JOB_FILE  | sed 's/Successfully submitted job //'`
 
 
 if [ ! -z "$id" ]
