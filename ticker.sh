@@ -6,7 +6,7 @@ if [ -z "$AGAVE_TICKER_DB" ]; then
 fi
 
 if [ -z "$AGAVE_TICKER_JOB_FILE" ]; then
-    echo "You need to set \$AGAVE_TICKER_DB var.."
+    echo "You need to set \$AGAVE_TICKER_JOB_FILE var.."
     exit 0
 fi
 
