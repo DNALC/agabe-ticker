@@ -41,7 +41,7 @@ do
 	if [ "$status" == "FINISHED" ] || [ "$status" == "KILLED" ] || [ "$status" == "FAILED" ] || [ "$status" == "STOPPED" ]
 	then
 		jobsList=$(jobs-list -v $id)
-		name=$(echo $jobsList | jq '.name')
+		executionSystem=$(echo $jobsList | jq '.executionSystem')
 		owner=$(echo $jobsList | jq '.owner')
 		appId=$(echo $jobsList | jq '.appId')
 		created=$(echo $jobsList | jq '.created')
@@ -52,7 +52,7 @@ do
 		( 
 		 # inserts id and job information into COMPLETED 
 		 # if the data was successfully inserted into COMPLETED, the id is deleted from CURRENT. Else, an error message is displayed
-		(sqlite3 $AGAVE_TICKER_DB "INSERT INTO completed VALUES('$id', '$status', $name, $owner, $appId, $created, $submitTime, $startTime, $endTime)") && \
+		(sqlite3 $AGAVE_TICKER_DB "INSERT INTO completed VALUES('$id', '$status', $executionSystem, $owner, $appId, $created, $submitTime, $startTime, $endTime)") && \
 				( (sqlite3 $AGAVE_TICKER_DB "DELETE FROM current WHERE id='$id'") || \
 					echo $(date +%Y-%m-%d%n%H:%M:%S) "Failure to delete $id from CURRENT") ) || \
 			( 
