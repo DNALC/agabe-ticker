@@ -18,16 +18,17 @@ then
 fi
 
 # submit job and keep job id
-id=$(jobs-submit -F $AGAVE_TICKER_JOB_FILE  | sed 's/Successfully submitted job //')
+response="$(jobs-submit -v -F $AGAVE_TICKER_JOB_FILE 2>&1)"
 
-
-if [ ! -z "$id" ]
+if [[ "$response" != "null"  && "${response:0:1}" == "{" ]]
 then
+	# obtain id from response
+	id=$(echo $response | jq 'try .id')
 	# store id into db
-	(sqlite3 $AGAVE_TICKER_DB "INSERT INTO current VALUES('$id')") \
+	(sqlite3 $AGAVE_TICKER_DB "INSERT INTO current VALUES($id)") \
 		|| echo $(date +%Y-%m-%d%n%H:%M:%S) "Failure to insert id $id into CURRENT"
 else
-	echo $(date +%Y-%m-%d%n%H:%M:%S) "No id produced"
+	echo $(date +%Y-%m-%d%n%H:%M:%S) $response
 fi
 
 # check job status for each job in 'current'
